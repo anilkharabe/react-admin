@@ -1,8 +1,10 @@
 import { useState } from "react";
 import Button from "../common/Button";
 import Input from "../common/Input";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { loginUser } from "../services/authServices";
+import { useDispatch } from "react-redux";
+import {setCredentials} from '../redux/authSlice'
 
 const Login = () => {
   const [form, setForm] = useState({
@@ -11,10 +13,9 @@ const Login = () => {
   });
 
   const navigate = useNavigate();
+  const dispatch = useDispatch(); 
 
   const handleChange = (e) => {
-    console.log("event", e.target.value);
-    console.log("event name", e.target.name);
     setForm({
       ...form,
       [e.target.name]: e.target.value,
@@ -26,8 +27,8 @@ const Login = () => {
     try {
       // we can make API request
       const data = await loginUser(form);
-      console.log("data", data.data.token);
-      sessionStorage.setItem("token", data.data);
+      console.log("data", data);
+      dispatch(setCredentials(data.data))
       navigate("/dashboard");
     } catch (error) {
         console.error('Login error', error)
@@ -52,6 +53,10 @@ const Login = () => {
           onChange={handleChange}
         ></Input>
         <Button text="Login" type="submit"></Button>
+        <p className="mt-5 text-sm">
+           Don't Have an account
+           <Link className="p-5 font-bold text-blue-400" to='/register'>Register</Link> 
+        </p>
       </form>
     </div>
   );
