@@ -4,7 +4,8 @@ import Input from "../common/Input";
 import { useNavigate, Link } from "react-router-dom";
 import { loginUser } from "../services/authServices";
 import { useDispatch } from "react-redux";
-import {setCredentials} from '../redux/authSlice'
+import {setCredentials} from '../redux/authSlice';
+import { useMutation } from "@tanstack/react-query";
 
 const Login = () => {
   const [form, setForm] = useState({
@@ -22,14 +23,25 @@ const Login = () => {
     });
   };
 
+  const {mutate} = useMutation({
+    mutationFn: loginUser
+  })
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       // we can make API request
-      const data = await loginUser(form);
-      console.log("data", data);
-      dispatch(setCredentials(data.data))
-      navigate("/dashboard");
+      // const data = await loginUser(form);
+
+      mutate(form, {
+        onSuccess:(data)=>{
+          dispatch(setCredentials(data.data))
+          navigate("/dashboard");
+        },
+        onError:(err)=>{
+          console.log('error while login')
+        }
+      })
     } catch (error) {
         console.error('Login error', error)
     }

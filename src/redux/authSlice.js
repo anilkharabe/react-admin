@@ -14,8 +14,10 @@ const authSlice = createSlice({
             sessionStorage.setItem('token', action.payload.token)
         },
         logout:(state)=>{
+            console.log('trying logout')
             state.token = null;
             state.user = null;
+            console.log("state", state)
             sessionStorage.removeItem('token')
         }
     }

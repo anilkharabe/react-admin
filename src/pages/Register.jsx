@@ -3,6 +3,7 @@ import Button from "../common/Button";
 import Input from "../common/Input";
 import { useNavigate } from "react-router-dom";
 import { regiterUser } from "../services/authServices";
+import { useMutation } from "@tanstack/react-query";
 
 const Register = () => {
   const [form, setForm] = useState({
@@ -20,12 +21,20 @@ const Register = () => {
     });
   };
 
-  const handleSubmit = async(e) => {
+  const { mutate } = useMutation({
+    mutationFn: regiterUser,
+  });
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("form data", form);
-    const data = await regiterUser(form);
-    console.log('register call data', data)
-    navigate("/");
+    mutate(form, {
+      onSuccess: (data) => {
+        navigate("/");
+      },
+      onError: (err) => {
+        console.log("error while login");
+      },
+    });
   };
 
   return (
