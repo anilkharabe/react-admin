@@ -4,21 +4,31 @@ import Input from "../common/Input";
 import { useNavigate } from "react-router-dom";
 import { regiterUser } from "../services/authServices";
 import { useMutation } from "@tanstack/react-query";
+import Select from "../common/Select";
 
 const Register = () => {
   const [form, setForm] = useState({
     name: "",
     email: "",
     password: "",
+    role: "res_owner",
   });
+
+  const options = [
+    {label:"Admin", value:"admin"},
+    {label:"Restaurant Owner", value:"res_owner"}
+  ]
 
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setForm({
-      ...form,
+    console.log(e.target.name)
+    console.log(e.target.value)
+    setForm((prevForm) => ({
+      ...prevForm,
       [e.target.name]: e.target.value,
-    });
+    }));
+    console.log('form', form)
   };
 
   const { mutate } = useMutation({
@@ -62,6 +72,13 @@ const Register = () => {
           value={form.password}
           onChange={handleChange}
         ></Input>
+
+        <Select lable="Role" option={options} value={form.role} onChange = {handleChange} name="role"></Select>
+        {/* <select name="role" value={form.role} onChange={handleChange}>
+          <option value="">Select Role</option>
+          <option value="admin">Admin</option>
+          <option value="res_owner">Restaurant Owner</option>
+        </select> */}
         <Button text="Register" type="submit"></Button>
       </form>
     </div>
