@@ -15,13 +15,3 @@ const Select = ({ lable, option = [], value, onChange, name }) => {
 };
 
 export default Select;
-
-// <Select option={options} value={form.role} onChange = {handleChange} name="Role"></Select>
-
-
-
-{/* <select name="role" value={form.role} onChange={handleChange}>
-    <option value="">Select Role</option>
-    <option value="admin">Admin</option>
-    <option value="res_owner">Restaurant Owner</option>
-</select> */}
