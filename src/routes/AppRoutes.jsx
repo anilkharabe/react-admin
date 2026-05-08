@@ -4,6 +4,9 @@ import Register from "../pages/Register";
 import Dashboard from "../pages/Dashboard";
 import ProtectedRoute from "../protectedRoute";
 import AdminDashboard from "../pages/adminDashboard";
+import CreateRestaurant from "../pages/CreateRestaurant";
+import MyRestaurant from "../pages/MyRestaurant";
+import MenuPage from "../pages/MenuPage";
 
 const AppRouters = () => {
   return (
@@ -27,6 +30,33 @@ const AppRouters = () => {
           element={
             <ProtectedRoute>
               <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/create-restaurant"
+          element={
+            <ProtectedRoute>
+              <CreateRestaurant />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/my-restaurants"
+          element={
+            <ProtectedRoute>
+              < MyRestaurant/>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/manage-menu"
+          element={
+            <ProtectedRoute>
+              < MenuPage/>
             </ProtectedRoute>
           }
         />

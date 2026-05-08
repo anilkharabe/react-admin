@@ -15,7 +15,9 @@ export const regiterUser = async(data) =>{
 }
 
 export const loginUser = async(data) =>{
-    return await API.post('/api/auth/login', data)
+    
+    const res =  await API.post('/api/auth/login', data)
+    return res;
 }
 
 // http://localhost:5000/api/auth/register
