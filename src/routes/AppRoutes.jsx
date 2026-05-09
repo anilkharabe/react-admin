@@ -52,14 +52,14 @@ const AppRouters = () => {
           }
         />
 
-        <Route
+        {/* <Route
           path="/manage-menu"
           element={
             <ProtectedRoute>
               < MenuPage/>
             </ProtectedRoute>
           }
-        />
+        /> */}
       </Routes>
     </BrowserRouter>
   );

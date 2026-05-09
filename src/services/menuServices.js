@@ -3,19 +3,20 @@
 import axios from "axios";
 
 const API = axios.create({
-    baseURL: 'http://localhost:5000'
+    baseURL: 'http://localhost:5000',
+    withCredentials: true
 });
 
 
 // interceptors configuration for headers
 
-API.interceptors.request.use((config)=>{
-    const jwt_token = sessionStorage.getItem("token");
-    if(jwt_token){
-        config.headers.Authorization = `Bearer ${jwt_token}`
-    }
-    return config;
-})
+// API.interceptors.request.use((config)=>{
+//     const jwt_token = sessionStorage.getItem("token");
+//     if(jwt_token){
+//         config.headers.Authorization = `Bearer ${jwt_token}`
+//     }
+//     return config;
+// })
 
 
 export const createMenu = async(data) =>{
@@ -29,5 +30,15 @@ export const getMenu = async(resturantId) =>{
 }
 
 // delete
+export const deleteMenu = async(id) =>{
+    const response =  await API.delete(`/api/menus/${id}`);
+    return response.data;
+}
 
 // update
+export const updateMenu = async({id, data}) =>{
+    console.log("id", id);
+    console.log("data", data)
+    const response =  await API.put(`/api/menus/${id}`, data);
+    return response.data;
+}

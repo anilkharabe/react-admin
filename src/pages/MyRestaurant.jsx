@@ -2,6 +2,7 @@ import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getRestaurants } from "../services/restaurantService";
 import Button from "../common/Button";
+import MenuPage from "./MenuPage";
 
 const MyRestaurant = () => {
   const { data, isLoading, isError, error } = useQuery({
@@ -35,6 +36,7 @@ const MyRestaurant = () => {
               </div>
             ))}
           </div>
+          <MenuPage />
         </div>
       )}
     </div>

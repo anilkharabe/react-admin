@@ -2,7 +2,12 @@
 
 import { useReducer } from "react";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { createMenu, getMenu } from "../services/menuServices";
+import {
+  createMenu,
+  getMenu,
+  deleteMenu,
+  updateMenu,
+} from "../services/menuServices";
 import Input from "../common/Input";
 import Button from "../common/Button";
 
@@ -16,16 +21,23 @@ const initialState = {
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case "UPDATE_FIELD":
+    case "ADD_FIELD":
       return {
         ...state,
         [action.field]: action.value,
       };
+
+    case "UPDATE_FIELD":
+      return {
+        ...state,
+        ...action.payload,
+      };
+
     case "RESET":
       return initialState;
 
     default:
-      state;
+      return state;
   }
 };
 
@@ -61,19 +73,46 @@ const MenuPage = () => {
   });
 
   // delete menu
-//     const { mutate: deleteMutation, isLoading: isApproving } = useMutation({
-//     mutationFn: createMenu,
-//     onSuccess: () => {
-//       console.log("Menu added successfully");
-//       queryClient.invalidateQueries(["menus", restaurantId]);
-//     },
-//     onError: (error) => {
-//       console.error("Error while adding menu:", error);
-//     },
-//   });
+  const { mutate: deleteMutation, isLoading: isDeleting } = useMutation({
+    mutationFn: deleteMenu,
+    onSuccess: () => {
+      console.log("Menu deleted successfully");
+      queryClient.invalidateQueries(["menus", restaurantId]);
+    },
+    onError: (error) => {
+      console.error("Error while adding menu:", error);
+    },
+  });
+
+  // update menu
+  const { mutate: updateMutation, isLoading: isUpdating } = useMutation({
+    mutationFn: updateMenu,
+    onSuccess: () => {
+      console.log("Menu updated successfully");
+      queryClient.invalidateQueries(["menus", restaurantId]);
+    },
+    onError: (error) => {
+      console.error("Error while updating menu:", error);
+    },
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (state.id) {
+      updateMutation({
+        id: state.id,
+        data: {
+          name: state.name,
+          price: state.price,
+          description: state.description,
+          category: state.category,
+          isVeg: state.isVeg,
+        },
+      });
+      return;
+    }
+
     createMutation({
       ...state,
       restaurant: restaurantId,
@@ -91,7 +130,7 @@ const MenuPage = () => {
             value={state.name}
             onChange={(e) => {
               dispatch({
-                type: "UPDATE_FIELD",
+                type: "ADD_FIELD",
                 field: "name",
                 value: e.target.value,
               });
@@ -104,7 +143,7 @@ const MenuPage = () => {
             value={state.price}
             onChange={(e) => {
               dispatch({
-                type: "UPDATE_FIELD",
+                type: "ADD_FIELD",
                 field: "price",
                 value: e.target.value,
               });
@@ -117,7 +156,7 @@ const MenuPage = () => {
             value={state.description}
             onChange={(e) => {
               dispatch({
-                type: "UPDATE_FIELD",
+                type: "ADD_FIELD",
                 field: "description",
                 value: e.target.value,
               });
@@ -130,7 +169,7 @@ const MenuPage = () => {
             value={state.category}
             onChange={(e) => {
               dispatch({
-                type: "UPDATE_FIELD",
+                type: "ADD_FIELD",
                 field: "category",
                 value: e.target.value,
               });
@@ -143,7 +182,7 @@ const MenuPage = () => {
             checked={state.isVeg}
             onChange={(e) => {
               dispatch({
-                type: "UPDATE_FIELD",
+                type: "ADD_FIELD",
                 field: "isVeg",
                 value: e.target.checked,
               });
@@ -154,18 +193,35 @@ const MenuPage = () => {
         </form>
 
         {/* Menu List */}
-        <div>
+        <div className="my-5">
           {menuData.map((menu) => (
-            <div key={menu._id} className="flex justify-between">
+            <div key={menu._id} className="flex justify-between my-4">
               <h2>{menu.name}</h2>
               <h2>{menu.price}</h2>
               <h2>{menu.description}</h2>
               <h2>{menu.category}</h2>
               <h2>{menu.isVeg ? "Veg" : "Non Veg"}</h2>
+
               <Button
-                text="Delete"
-                onClick={() => approveUserMutation(currentOwner._id)}
+                text="Update"
+                onClick={() =>
+                  dispatch({
+                    type: "UPDATE_FIELD",
+                    payload: {
+                      id: menu._id,
+                      name: menu.name,
+                      price: menu.price,
+                      description: menu.description,
+                      category: menu.category,
+                      isVeg: menu.isVeg,
+                    },
+                  })
+                }
               >
+                Update
+              </Button>
+
+              <Button text="Delete" onClick={() => deleteMutation(menu._id)}>
                 Delete
               </Button>
             </div>

@@ -3,19 +3,20 @@
 import axios from "axios";
 
 const API = axios.create({
-    baseURL: 'http://localhost:5000'
+    baseURL: 'http://localhost:5000',
+    withCredentials: true
 });
 
 
 // interceptors configuration for headers
 
-API.interceptors.request.use((config)=>{
-    const jwt_token = sessionStorage.getItem("token");
-    if(jwt_token){
-        config.headers.Authorization = `Bearer ${jwt_token}`
-    }
-    return config;
-})
+// API.interceptors.request.use((config)=>{
+//     const jwt_token = sessionStorage.getItem("token");
+//     if(jwt_token){
+//         config.headers.Authorization = `Bearer ${jwt_token}`
+//     }
+//     return config;
+// })
 
 export const getPendingUsers = async() =>{
     const data =  await API.get('/api/admin/pending-owners');
